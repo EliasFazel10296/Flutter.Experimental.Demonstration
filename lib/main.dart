@@ -1,3 +1,4 @@
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -74,6 +75,8 @@ class HomePageState extends State<HomePage> {
     //Update UI Every Time setState Called
     //(For UI Elements That Changed)
 
+    final wordPair = WordPair.random();
+
     Scaffold scaffold = Scaffold(
 
       appBar: AppBar(
@@ -92,7 +95,7 @@ class HomePageState extends State<HomePage> {
               children: <Widget>[
 
                 Text(
-                  'XYZ Counter',
+                  '${wordPair.asPascalCase}',
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -126,12 +129,12 @@ class HomePageState extends State<HomePage> {
 
                     ),
 
-                    RaisedButton(
+                    MaterialButton(
 
                       onPressed: () {
                         Scaffold.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Have a snack!'),
+                            content: Text('${WordPair.random().asPascalCase}'),
                           ),
                         );
                       },
@@ -139,7 +142,7 @@ class HomePageState extends State<HomePage> {
                       color: Colors.blue,
                       splashColor: Colors.purple,
 
-                      child: Text("Show Message"),
+                      child: Text("Show An English Word"),
 
                     )
 
