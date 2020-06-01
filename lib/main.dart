@@ -1,13 +1,18 @@
+import 'dart:ui';
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
 
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.pinkAccent,
-    statusBarColor: Colors.pinkAccent,
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+
+      SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.pinkAccent,
+        statusBarColor: Colors.pinkAccent,
+      )
+  );
 
   runApp(RootWidget());
 }
@@ -53,7 +58,10 @@ class HomePage extends StatefulWidget {
   final String appTitle;
 
   @override
-  HomePageState createState() => HomePageState();
+  HomePageState createState() {
+
+    return HomePageState();
+  }
 }
 
 class HomePageState extends State<HomePage> {
@@ -63,6 +71,7 @@ class HomePageState extends State<HomePage> {
   void calculateCounter() {
 
     setState(() {
+
       //Change State With New Value
       valueCounter++;
 
@@ -77,84 +86,73 @@ class HomePageState extends State<HomePage> {
 
     final wordPair = WordPair.random();
 
+    RandomWords randomWordsView = RandomWords();
+
     Scaffold scaffold = Scaffold(
 
-      appBar: AppBar(
-
-        title: Text(widget.appTitle/*Value from Home Widget*/),
-
-      ),
-
       body: Builder(builder: (context) =>
-          Center(//Align All Child UI Element To Center
 
-            child: Column(//Vertical View
+          Column(//Vertical View
 
-              mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
 
-              children: <Widget>[
+            children: <Widget>[
 
-                Text(
-                  '${wordPair.asPascalCase}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+              Text(
+                '${valueCounter}',
+                style: TextStyle(
+                  color: Colors.white,
+                  height: 2,
+                  fontSize: 30,
                 ),
+              ),
 
-                Text(
-                  '${valueCounter}',
-                  style: TextStyle(
-                    color: Colors.white,
-                    height: 2,
-                    fontSize: 30,
-                  ),
-                ),
+              Row(
 
-                Row(
+                mainAxisAlignment: MainAxisAlignment.center,
 
-                  mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
 
-                  children: <Widget>[
+                  MaterialButton(
 
-                    MaterialButton(
+                    onPressed: () {
 
-                      onPressed: calculateCounter,
+                      //randomWordsView.initialText = "XYZ";
 
-                      enableFeedback: true,
+                      Scaffold.of(context).showSnackBar(
 
-                      color: Colors.blue,
-                      splashColor: Colors.purple,
+                        SnackBar(
 
-                      child: Text("Increase Counter"),
+                          content: Text('${WordPair.random().asPascalCase}'),
 
-                    ),
+                        ),
 
-                    MaterialButton(
+                      );
+                    },
 
-                      onPressed: () {
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${WordPair.random().asPascalCase}'),
-                          ),
-                        );
-                      },
+                    color: Colors.blue,
+                    splashColor: Colors.purple,
 
-                      color: Colors.blue,
-                      splashColor: Colors.purple,
+                    child: Text("Show An English Word"),
 
-                      child: Text("Show An English Word"),
+                  )
 
-                    )
+                ],
 
-                  ],
+              ),
 
-                )
+              Padding(
 
-              ],
+                padding: EdgeInsets.all(13),
 
-            ),
+                child: randomWordsView,
+
+              ),
+
+            ],
 
           ),
+
       ),
 
       floatingActionButton: FloatingActionButton(
@@ -169,7 +167,52 @@ class HomePageState extends State<HomePage> {
 
     );
 
-    return scaffold;
+    return Padding(
+
+      padding: EdgeInsets.all(13),
+
+      child: scaffold,
+
+    );
   }
 
+}
+
+/* Custom Stateful Widget */
+class RandomWords extends StatefulWidget {
+
+  @override
+  RandomWordsState createState() => RandomWordsState();
+}
+
+class RandomWordsState extends State<RandomWords> {
+
+  Text aTextView;
+
+  Text createTextView(String initialText) {
+
+    return Text(
+      initialText,
+
+      style: TextStyle(
+        color: Colors.lightGreenAccent,
+      ),
+    );
+
+  }
+
+  Text returnTextView() {
+
+    return this.aTextView;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final wordPair = WordPair.random();
+
+    this.aTextView = createTextView(wordPair.asPascalCase);
+
+    return this.aTextView;
+  }
 }
