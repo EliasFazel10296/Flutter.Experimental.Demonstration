@@ -29,18 +29,18 @@ class RootWidget extends StatelessWidget {
 
       theme: ThemeData(
 
-        primarySwatch: Colors.blue,
-        primaryColorDark: Colors.blue,
+          primarySwatch: Colors.blue,
+          primaryColorDark: Colors.blue,
 
-        backgroundColor: Colors.transparent,
-        scaffoldBackgroundColor: Colors.black,
+          backgroundColor: Colors.transparent,
+          scaffoldBackgroundColor: Colors.black,
 
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
 
-        appBarTheme: AppBarTheme(
-          color: Colors.pinkAccent,
-          brightness: Brightness.dark,
-        )
+          appBarTheme: AppBarTheme(
+            color: Colors.pinkAccent,
+            brightness: Brightness.dark,
+          )
 
       ),
 
@@ -84,10 +84,6 @@ class HomePageState extends State<HomePage> {
     //Update UI Every Time setState Called
     //(For UI Elements That Changed)
 
-    final wordPair = WordPair.random();
-
-    RandomWords randomWordsView = RandomWords();
-
     Scaffold scaffold = Scaffold(
 
       body: Builder(builder: (context) =>
@@ -107,47 +103,7 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
 
-              Row(
-
-                mainAxisAlignment: MainAxisAlignment.center,
-
-                children: <Widget>[
-
-                  MaterialButton(
-
-                    onPressed: () {
-
-                      //randomWordsView.initialText = "XYZ";
-
-                      Scaffold.of(context).showSnackBar(
-
-                        SnackBar(
-
-                          content: Text('${WordPair.random().asPascalCase}'),
-
-                        ),
-
-                      );
-                    },
-
-                    color: Colors.blue,
-                    splashColor: Colors.purple,
-
-                    child: Text("Show An English Word"),
-
-                  )
-
-                ],
-
-              ),
-
-              Padding(
-
-                padding: EdgeInsets.all(13),
-
-                child: randomWordsView,
-
-              ),
+              RandomWords(),
 
             ],
 
@@ -157,7 +113,20 @@ class HomePageState extends State<HomePage> {
 
       floatingActionButton: FloatingActionButton(
 
-        onPressed: calculateCounter,
+        onPressed: () {
+
+          calculateCounter();
+
+          Scaffold.of(context).showSnackBar(
+
+            SnackBar(
+
+              content: Text('${WordPair.random().asPascalCase}'),
+
+            ),
+
+          );
+        },
 
         tooltip: 'Increment',
 
@@ -195,6 +164,7 @@ class RandomWordsState extends State<RandomWords> {
       initialText,
 
       style: TextStyle(
+        fontSize: 19.0,
         color: Colors.lightGreenAccent,
       ),
     );
@@ -206,6 +176,33 @@ class RandomWordsState extends State<RandomWords> {
     return this.aTextView;
   }
 
+  final suggestions = <WordPair>[];
+
+  Widget buildSuggestions() {
+
+    return ListView.builder(
+
+        padding: EdgeInsets.all(16.0),
+
+        itemBuilder: /*1*/ (context, i) {
+          if (i.isOdd) return Divider(); /*2*/
+
+          final index = i ~/ 2; /*3*/
+          if (index >= suggestions.length) {
+            suggestions.addAll(generateWordPairs().take(10)); /*4*/
+          }
+          return buildRow(suggestions[index]);
+        });
+  }
+
+  Widget buildRow(WordPair wordPair) {
+
+    return ListTile(
+      title: createTextView(wordPair.asPascalCase),
+    );
+
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -213,6 +210,10 @@ class RandomWordsState extends State<RandomWords> {
 
     this.aTextView = createTextView(wordPair.asPascalCase);
 
-    return this.aTextView;
+//    return /*this.aTextView*/buildSuggestions();
+
+    return Expanded(
+        child: buildSuggestions()
+    );
   }
 }
