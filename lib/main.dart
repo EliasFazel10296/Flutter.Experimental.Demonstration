@@ -98,10 +98,8 @@ class HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
           calculateCounter();
-
-          },
+        },
         tooltip: 'Increment',
         child: Icon(Icons.games),
       ),
