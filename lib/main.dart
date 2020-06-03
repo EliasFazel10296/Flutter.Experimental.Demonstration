@@ -98,20 +98,10 @@ class HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //    randomWords.createState().pushSaved();
 
-          //  calculateCounter();
+          calculateCounter();
 
-          builder:
-          (contextBuilder) => {
-                Scaffold.of(contextBuilder).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                        '${valueCounter}. ${WordPair.random().asPascalCase}'),
-                  ),
-                ),
-              };
-        },
+          },
         tooltip: 'Increment',
         child: Icon(Icons.games),
       ),
