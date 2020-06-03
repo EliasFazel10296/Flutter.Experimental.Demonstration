@@ -32,15 +32,10 @@ class RootWidget extends StatelessWidget {
           primarySwatch: Colors.blue,
           primaryColorDark: Colors.blue,
 
-          backgroundColor: Colors.transparent,
-          scaffoldBackgroundColor: Colors.black,
+          backgroundColor: Colors.white,
+          scaffoldBackgroundColor: Colors.white,
 
           visualDensity: VisualDensity.adaptivePlatformDensity,
-
-          appBarTheme: AppBarTheme(
-            color: Colors.pinkAccent,
-            brightness: Brightness.dark,
-          )
 
       ),
 
@@ -96,14 +91,20 @@ class HomePageState extends State<HomePage> {
 
               Text(
                 '${valueCounter}',
+
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.indigo,
                   height: 2,
                   fontSize: 30,
                 ),
+
               ),
 
-              RandomWords(),
+              Expanded(
+
+                child: RandomWords(),
+
+              ),
 
             ],
 
@@ -130,7 +131,7 @@ class HomePageState extends State<HomePage> {
 
         tooltip: 'Increment',
 
-        child: Icon(Icons.add),
+        child: Icon(Icons.games),
 
       ),
 
@@ -138,7 +139,7 @@ class HomePageState extends State<HomePage> {
 
     return Padding(
 
-      padding: EdgeInsets.all(13),
+      padding: EdgeInsets.fromLTRB(0, 13, 0, 0),
 
       child: scaffold,
 
@@ -156,8 +157,6 @@ class RandomWords extends StatefulWidget {
 
 class RandomWordsState extends State<RandomWords> {
 
-  Text aTextView;
-
   Text createTextView(String initialText) {
 
     return Text(
@@ -165,40 +164,75 @@ class RandomWordsState extends State<RandomWords> {
 
       style: TextStyle(
         fontSize: 19.0,
-        color: Colors.lightGreenAccent,
+        color: Colors.blueAccent,
       ),
+
     );
 
   }
 
-  Text returnTextView() {
+  Icon createFavoriteIcon(WordPair wordPair) {
 
-    return this.aTextView;
+    return Icon(
+
+      savedWordPair.contains(wordPair) ? Icons.favorite : Icons.favorite_border,
+
+      color: savedWordPair.contains(wordPair) ? Colors.pinkAccent : Colors.lightGreenAccent,
+
+    );
+
   }
 
   final suggestions = <WordPair>[];
+  final Set<WordPair> savedWordPair = Set<WordPair>();
 
   Widget buildSuggestions() {
 
     return ListView.builder(
 
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.fromLTRB(13, 7, 13, 3),
 
         itemBuilder: /*1*/ (context, i) {
+
           if (i.isOdd) return Divider(); /*2*/
 
           final index = i ~/ 2; /*3*/
           if (index >= suggestions.length) {
             suggestions.addAll(generateWordPairs().take(10)); /*4*/
           }
+
           return buildRow(suggestions[index]);
+
         });
+
   }
 
   Widget buildRow(WordPair wordPair) {
 
     return ListTile(
+
       title: createTextView(wordPair.asPascalCase),
+
+      trailing: createFavoriteIcon(wordPair),
+
+      onTap: () {
+
+        setState(() {
+
+          if (savedWordPair.contains(wordPair)) {
+
+            savedWordPair.remove(wordPair);
+
+          } else {
+
+            savedWordPair.add(wordPair);
+
+          }
+
+        });
+
+      },
+
     );
 
   }
@@ -206,14 +240,6 @@ class RandomWordsState extends State<RandomWords> {
   @override
   Widget build(BuildContext context) {
 
-    final wordPair = WordPair.random();
-
-    this.aTextView = createTextView(wordPair.asPascalCase);
-
-//    return /*this.aTextView*/buildSuggestions();
-
-    return Expanded(
-        child: buildSuggestions()
-    );
+    return buildSuggestions();
   }
 }
