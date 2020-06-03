@@ -63,18 +63,6 @@ class HomePageState extends State<HomePage> {
     RandomWords randomWords = RandomWords();
 
     Scaffold scaffold = Scaffold(
-      appBar: AppBar(
-        title: Text('Startup Name Generator'),
-        actions: <Widget>[
-          // Add 3 lines from here...
-          IconButton(
-            icon: Icon(Icons.list),
-            onPressed: () {
-              randomWords.createState().pushSaved();
-            },
-          ),
-        ], // ... to here.
-      ),
       body: Builder(
         builder: (contextBuilder) => Column(
           //Vertical View
@@ -99,6 +87,8 @@ class HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           calculateCounter();
+
+          RandomWordsState.pushSaved(context);
         },
         tooltip: 'Increment',
         child: Icon(Icons.games),
@@ -120,7 +110,7 @@ class RandomWords extends StatefulWidget {
 
 class RandomWordsState extends State<RandomWords> {
   final suggestions = <WordPair>[];
-  final Set<WordPair> savedWordPair = Set<WordPair>();
+  static final Set<WordPair> savedWordPair = Set<WordPair>();
 
   Text createTextView(String initialText) {
     return Text(
@@ -173,14 +163,20 @@ class RandomWordsState extends State<RandomWords> {
     );
   }
 
-  void pushSaved() {
+  static void pushSaved(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (BuildContext context) {
           final Iterable<ListTile> tiles = savedWordPair.map(
             (WordPair wordPair) {
               return ListTile(
-                title: createTextView(wordPair.asPascalCase),
+                title: Text(
+                  wordPair.asPascalCase,
+                  style: TextStyle(
+                    fontSize: 19.0,
+                    color: Colors.blueAccent,
+                  ),
+                ),
               );
             },
           );
@@ -191,10 +187,10 @@ class RandomWordsState extends State<RandomWords> {
           ).toList();
 
           return Scaffold(
-            // Add 6 lines from here...
             appBar: AppBar(
               title: Text('Saved Suggestions'),
             ),
+            body: ListView(children: divided),
           );
         },
       ),
