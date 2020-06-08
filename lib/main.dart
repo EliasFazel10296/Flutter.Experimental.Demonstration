@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:FlutterAdvanceDemonstration/keepnote.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,10 +11,10 @@ void main() {
     statusBarColor: Colors.pinkAccent,
   ));
 
-  runApp(RootWidget());
+  runApp(MainRootWidget());
 }
 
-class RootWidget extends StatelessWidget {
+class MainRootWidget extends StatelessWidget {
   // Root Widget
 
   @override
@@ -88,10 +89,19 @@ class HomePageState extends State<HomePage> {
         onPressed: () {
           calculateCounter();
 
-          RandomWordsState.pushSaved(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => KeepNoteRootWidget()),
+          );
         },
         tooltip: 'Increment',
-        child: Icon(Icons.games),
+//        child: Icon(Icons.games),
+        child: GestureDetector(
+          child: Icon(Icons.games),
+          onLongPress: () {
+            RandomWordsState.pushSaved(context);
+          },
+        ),
       ),
     );
 
